@@ -17,6 +17,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,12 +31,12 @@ import pt.ua.cantinas.models.Menu;
  * Created by lricardo on 10/1/16.
  */
 
-public class FetchMenusTask extends AsyncTask<Void, Void, ArrayList<Menu>> {
+public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<Menu>>> {
     @Override
-    protected ArrayList<Menu> doInBackground(Void... params) {
+    protected Map<String, ArrayList<Menu>> doInBackground(Void... params) {
 
 
-        ArrayList<Menu> menuList = new ArrayList<>();
+        Map<String, ArrayList<Menu>> menuMap = new HashMap<>();
 
         try {
             URL url = new URL("http://services.web.ua.pt/sas/ementas");
@@ -74,7 +76,12 @@ public class FetchMenusTask extends AsyncTask<Void, Void, ArrayList<Menu>> {
                         attributes.getNamedItem("weekdayNr").getNodeValue()
                 );
 
-                // Retrieve
+                // Initialize map, if need
+                if (menuMap.get(menu.getCanteen()) == null) {
+                    menuMap.put(menu.getCanteen(), new ArrayList<Menu>());
+                }
+
+                // Iterate the map
                 if (menu.isDisabled() == false) {
 
                     NodeList menu_items = menus.item(i).getChildNodes();
@@ -98,12 +105,16 @@ public class FetchMenusTask extends AsyncTask<Void, Void, ArrayList<Menu>> {
                             continue;
                         }
                     }
+
+                    //menugetadd here
                 }
-                menuList.add(menu);
+
+                menuMap.get(menu.getCanteen()).add(menu);
+
 
             }   // for-loop ends
 
-            return menuList;
+            return menuMap;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

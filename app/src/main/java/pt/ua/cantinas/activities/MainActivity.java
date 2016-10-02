@@ -1,11 +1,14 @@
 package pt.ua.cantinas.activities;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import pt.ua.cantinas.R;
@@ -23,15 +26,5 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_placeholder, new MainFragment());
         fragmentTransaction.commit();
-
-        try {
-            ArrayList<Menu> menuList = new FetchMenusTask().execute().get();
-            Toast.makeText(this, "Size = " + menuList.size(), Toast.LENGTH_LONG).show();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
     }
 }

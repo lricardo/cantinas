@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="230dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/canteen_image"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="170dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/canteen_name"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_below="@id/canteen_image"
+                android:layout_weight=".3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:layout_margin="18dp"/>
+
+            <Button
+                android:id="@+id/canteen_see_button"
+                android:text="@string/see"
+                android:layout_weight=".7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:borderlessButtonStyle"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
