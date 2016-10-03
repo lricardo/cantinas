@@ -2,6 +2,7 @@ package pt.ua.cantinas.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,16 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        // Inflate and give the button action
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.go_back_button);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
 
         // Get the bundle associated to the fragment
         Bundle bundle = getArguments();

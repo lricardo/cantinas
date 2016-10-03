@@ -1,9 +1,12 @@
 package pt.ua.cantinas.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,14 +25,12 @@ import pt.ua.cantinas.tasks.FetchMenusTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Map<Menu, ArrayList<Item>> mMenus;
-    private Set<String> mCanteens;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (checkConnection()) {
         try {
             // Execute async task
             new FetchMenusTask().execute().get();
@@ -39,17 +40,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        // Bundle for sending the menus to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("menus_dictionary", (Serializable) mMenus);
+        }
+        else {
+            Toast.makeText(
+                    this,
+                    "Smartphone sem conexão. A App utilizará os últimos dados guardados em memória.",
+                    Toast.LENGTH_LONG).show();
+        }
 
         // We can't send an intent to a fragment, but the fragment has a way for that
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.setArguments(bundle);
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_placeholder, mainFragment);
+        fragmentTransaction.replace(R.id.fragment_placeholder, new MainFragment());
         fragmentTransaction.commit();
+    }
+
+    /**
+     * Verify if there is an internet connection.
+     * @return true if there is connection, false otherwise
+     */
+    public boolean checkConnection () {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getActiveNetworkInfo() != null;
+
     }
 }
