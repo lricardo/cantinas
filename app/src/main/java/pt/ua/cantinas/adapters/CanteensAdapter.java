@@ -104,6 +104,7 @@ public class CanteensAdapter extends RecyclerView.Adapter<CanteensAdapter.ViewHo
                 Bundle bundle = new Bundle();
 
                 bundle.putParcelableArrayList("menus", menus);
+                bundle.putString("canteen_name", canteenName);
                 detailFragment.setArguments(bundle);
 
                 fragmentTransaction.replace(R.id.fragment_placeholder, detailFragment);
