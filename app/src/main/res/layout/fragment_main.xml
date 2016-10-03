@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_main_layout"
     android:layout_width="match_parent"
@@ -12,4 +12,4 @@
 
     </android.support.v7.widget.RecyclerView>
 
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

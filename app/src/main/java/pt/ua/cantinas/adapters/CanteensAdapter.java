@@ -117,6 +117,7 @@ public class CanteensAdapter extends RecyclerView.Adapter<CanteensAdapter.ViewHo
     }
 
     @Override
+
     public int getItemCount() {
         if (canteens != null) {
             return canteens.size();
@@ -124,6 +125,19 @@ public class CanteensAdapter extends RecyclerView.Adapter<CanteensAdapter.ViewHo
         else {
             return 0;
         }
+    }
+
+    /**
+     * Helper Methods for RefreshLayout
+     */
+    public void clear() {
+        canteens.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Canteen> incomingCanteens) {
+        canteens.addAll(incomingCanteens);
+        notifyDataSetChanged();
     }
 
 }
