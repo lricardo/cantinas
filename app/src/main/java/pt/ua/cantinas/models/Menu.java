@@ -131,4 +131,8 @@ public class Menu extends SugarRecord implements Parcelable {
         result = 31 * result + (disabled ? 1 : 0);
         return result;
     }
+
+    public List<Item> getItems() {
+        return Item.find(Item.class, "menu = ?", String.valueOf(getId()));
+    }
 }

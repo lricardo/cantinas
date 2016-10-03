@@ -135,10 +135,15 @@ public class FetchMenusTask extends AsyncTask<Void, Void, Void> {
 
             // If there are not repeated entries, save them (assuming that the WS is integral)
             for(Menu menu: menuMap.keySet()) {
-                for(Item item: menuMap.get(menu)) {
-                    item.save();
-                }
+                // Menu must be saved first, because it's used in the relationship
                 menu.save();
+
+                for(Item item: menuMap.get(menu)) {
+                    // Only saves if item is relevant
+                    if (!item.getText().isEmpty()) {
+                        item.save();
+                    }
+                }
             }
 
             // Verify the existence of new canteens

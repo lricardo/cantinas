@@ -14,7 +14,7 @@ public class Item  extends SugarRecord implements Parcelable {
     private String text;
     private Menu menu;
 
-    private Item() {
+    public Item() {
 
     }
 
@@ -68,6 +68,6 @@ public class Item  extends SugarRecord implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(text);
-        dest.writeParcelable(menu, 2);
+        dest.writeParcelable(menu, 0);
     }
 }
