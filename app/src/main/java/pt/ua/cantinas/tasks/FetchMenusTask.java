@@ -18,25 +18,28 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import pt.ua.cantinas.models.Canteen;
 import pt.ua.cantinas.models.Item;
 import pt.ua.cantinas.models.Menu;
 
 /**
- * Created by lricardo on 10/1/16.
+ * AsyncTask which gathers information from a XML webservice.
+ * Created by Leandro Ricardo on 10/1/16.
  */
 
-public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<Menu>>> {
+public class FetchMenusTask extends AsyncTask<Void, Void, Void> {
     @Override
-    protected Map<String, ArrayList<Menu>> doInBackground(Void... params) {
+    protected Void doInBackground(Void... params) {
 
 
-        Map<String, ArrayList<Menu>> menuMap = new HashMap<>();
+        Map<Menu, ArrayList<Item>> menuMap = new HashMap<>();
 
         try {
             URL url = new URL("http://services.web.ua.pt/sas/ementas");
@@ -77,8 +80,8 @@ public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<
                 );
 
                 // Initialize map, if need
-                if (menuMap.get(menu.getCanteen()) == null) {
-                    menuMap.put(menu.getCanteen(), new ArrayList<Menu>());
+                if (menuMap.get(menu) == null) {
+                    menuMap.put(menu, new ArrayList<Item>());
                 }
 
                 // Iterate the map
@@ -93,12 +96,17 @@ public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<
                             NodeList item_list = menu_items.item(j).getChildNodes();
 
                             for (int k = 0; k < item_list.getLength(); k++) {
-                                menu.addItem(
-                                        new Item(
-                                                item_list.item(k).getLocalName(),
-                                                item_list.item(k).getNodeValue()
-                                        )
-                                );
+
+                                if (item_list.item(k).getNodeType() == Node.ELEMENT_NODE) {
+
+                                    Item item = new Item(
+                                            item_list.item(k).getAttributes().getNamedItem("name").getTextContent(),
+                                            item_list.item(k).getTextContent(),
+                                            menu
+                                    );
+
+                                    menuMap.get(menu).add(item);
+                                }
                             }
                         }
                         else {
@@ -106,15 +114,43 @@ public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<
                         }
                     }
 
-                    //menugetadd here
                 }
 
-                menuMap.get(menu.getCanteen()).add(menu);
 
 
             }   // for-loop ends
 
-            return menuMap;
+            // Verify the existence of new menus
+            long count = Menu.count(Menu.class);
+
+            if (count != 0) {
+                Menu lastMenu = Menu.last(Menu.class);
+
+                for(Menu menu: menuMap.keySet()) {
+                    if (menu.equals(lastMenu)) {
+                        return null;
+                    }
+                }
+            }
+
+            // If there are not repeated entries, save them (assuming that the WS is integral)
+            for(Menu menu: menuMap.keySet()) {
+                for(Item item: menuMap.get(menu)) {
+                    item.save();
+                }
+                menu.save();
+            }
+
+            // Verify the existence of new canteens
+            for(Menu menu: menuMap.keySet()) {
+
+                List<Canteen> canteens = Canteen.findWithQuery(Canteen.class, "Select * from Canteen where name = ?", menu.getCanteen());
+
+                if (canteens.size() == 0) {
+                    Canteen canteen = new Canteen(menu.getCanteen());
+                    canteen.save();
+                }
+            }
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -131,4 +167,5 @@ public class FetchMenusTask extends AsyncTask<Void, Void, Map<String, ArrayList<
         // There was an error, returns null
         return null;
     }
+
 }
