@@ -2,28 +2,22 @@ package pt.ua.cantinas.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import pt.ua.cantinas.R;
 import pt.ua.cantinas.fragments.DetailFragment;
-import pt.ua.cantinas.fragments.MainFragment;
 import pt.ua.cantinas.models.Canteen;
 import pt.ua.cantinas.models.Menu;
 

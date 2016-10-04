@@ -14,7 +14,9 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import pt.ua.cantinas.R;
 import pt.ua.cantinas.adapters.ItemAdapter;
@@ -56,7 +58,7 @@ public class DetailFragment extends Fragment {
         String canteenName = bundle.getString("canteen_name");
 
         ArrayList<Item> menuItems = new ArrayList<>();
-        Date date = new Date();
+        Date dateNow = new Date();
         String canteenCloseTimeStr = "14:30";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         Date canteenCloseTime = null;
@@ -67,11 +69,19 @@ public class DetailFragment extends Fragment {
             e.printStackTrace();
         }
 
+        Calendar calendar1 = GregorianCalendar.getInstance();
+        Calendar calendar2 = GregorianCalendar.getInstance();
+
+        calendar1.setTime(dateNow);
+        calendar2.setTime(canteenCloseTime);
+
         Menu candidate =  null;
         TextView lunchDinner = (TextView) view.findViewById(R.id.lunch_diner_designation);
 
         // Closed? Show only the lunch
-        if (date.before(canteenCloseTime)) {
+        if (calendar1.get(Calendar.HOUR_OF_DAY) < calendar2.get(Calendar.HOUR_OF_DAY) ||
+                calendar1.get(Calendar.HOUR_OF_DAY) == calendar2.get(Calendar.HOUR_OF_DAY) &&
+                        calendar1.get(Calendar.MINUTE) <= calendar2.get(Calendar.MINUTE)) {
 
             //Set image
             lunchDinner.setText("Almoço");

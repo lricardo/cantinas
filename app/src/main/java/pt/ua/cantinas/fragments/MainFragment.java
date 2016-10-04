@@ -20,7 +20,9 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,12 +127,20 @@ public class MainFragment extends Fragment {
             e.printStackTrace();
         }
 
+        Calendar calendar1 = GregorianCalendar.getInstance();
+        Calendar calendar2 = GregorianCalendar.getInstance();
+
+        calendar1.setTime(dateNow);
+        calendar2.setTime(canteenCloseDate);
+
         // Get last menu sync date
         Menu last = Menu.last(Menu.class);
         List<Menu> lastMenus = Menu.find(Menu.class, "date = ?", last.getDate().getTime()+"");
         ArrayList<Canteen> openedCanteens = new ArrayList<>();
 
-        if (dateNow.before(canteenCloseDate)) {
+        if (calendar1.get(Calendar.HOUR_OF_DAY) < calendar2.get(Calendar.HOUR_OF_DAY) ||
+                calendar1.get(Calendar.HOUR_OF_DAY) == calendar2.get(Calendar.HOUR_OF_DAY) &&
+                        calendar1.get(Calendar.MINUTE) <= calendar2.get(Calendar.MINUTE)) {
             for (Menu menu: lastMenus) {
                 if (menu.getMeal().equals("Almoço") && menu.isDisabled() == false) {
                     openedCanteens.addAll(Canteen.find(Canteen.class, "name = ?", menu.getCanteen()));
